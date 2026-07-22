@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}SupervisorMatch{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="{{ url_for('main.index') }}">Supervisor<span>Match</span></a>
+      <nav class="nav">
+        {% if current_user.is_authenticated %}
+          {% if current_user.is_staff %}
+            <a href="{{ url_for('staff.dashboard') }}">My profile</a>
+          {% else %}
+            <a href="{{ url_for('student.browse') }}">Find a supervisor</a>
+          {% endif %}
+          <span class="nav-user">{{ current_user.name }}</span>
+          <a class="btn btn-ghost" href="{{ url_for('auth.logout') }}">Log out</a>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}">Log in</a>
+          <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Sign up</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flashes">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      SupervisorMatch &middot; Final-year project supervisor matching &middot; M30819
+    </div>
+  </footer>
+</body>
+</html>

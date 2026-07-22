@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Find a supervisor &middot; SupervisorMatch{% endblock %}
+{% block content %}
+<h1 class="page-title">Find a supervisor</h1>
+<p class="subtitle">Search staff by name or topic, or filter by an area of interest.</p>
+
+<div class="card">
+  <form method="get" action="{{ url_for('student.browse') }}">
+    <div class="row">
+      <div style="flex:2; min-width:200px;">
+        <label for="q">Search</label>
+        <input type="text" id="q" name="q" value="{{ q }}"
+               placeholder="Name, title or keyword">
+      </div>
+      <div style="flex:1; min-width:160px;">
+        <label for="area">Area of interest</label>
+        <select id="area" name="area">
+          <option value="">All areas</option>
+          {% for a in all_areas %}
+            <option value="{{ a }}" {{ 'selected' if a == area }}>{{ a }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="align-self:flex-end;">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+{% if staff %}
+  <div class="grid grid-2">
+    {% for member in staff %}
+      <div class="card">
+        <h3 style="margin:0 0 4px;">
+          <a href="{{ url_for('student.view_staff', staff_id=member.id) }}">
+            {{ member.title }} {{ member.name }}
+          </a>
+        </h3>
+        {% if member.bio %}<p class="muted">{{ member.bio|truncate(110) }}</p>{% endif %}
+        <div>
+          {% for a in member.areas %}<span class="tag">{{ a.name }}</span>{% endfor %}
+        </div>
+        <p class="muted" style="margin-top:10px; font-size:.85rem;">
+          {{ member.project_ideas|length }} project idea(s)
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="empty">No staff match your search.</p>
+{% endif %}
+{% endblock %}

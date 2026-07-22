@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Edit profile &middot; SupervisorMatch{% endblock %}
+{% block content %}
+<h1 class="page-title">Edit profile</h1>
+<div class="card" style="max-width:560px;">
+  <form method="post" action="{{ url_for('staff.profile') }}">
+    <label for="name">Full name</label>
+    <input type="text" id="name" name="name" value="{{ current_user.name }}" required>
+
+    <label for="title">Title</label>
+    <input type="text" id="title" name="title" value="{{ current_user.title or '' }}"
+           placeholder="e.g. Dr, Senior Lecturer">
+
+    <label for="bio">Bio</label>
+    <textarea id="bio" name="bio" placeholder="A short description of your work">{{ current_user.bio or '' }}</textarea>
+
+    <label for="capacity">Supervision capacity</label>
+    <input type="number" id="capacity" name="capacity" min="0"
+           value="{{ current_user.capacity if current_user.capacity is not none else 4 }}">
+
+    <button type="submit" class="btn btn-primary">Save profile</button>
+  </form>
+</div>
+{% endblock %}

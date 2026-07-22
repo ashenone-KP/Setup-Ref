@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Not allowed &middot; SupervisorMatch{% endblock %}
+{% block content %}
+<div class="hero">
+  <h1>403 &mdash; Not allowed</h1>
+  <p>You don't have permission to view this page with your current account.</p>
+  <a class="btn btn-primary" href="{{ url_for('main.index') }}">Go home</a>
+</div>
+{% endblock %}

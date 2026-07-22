@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}My profile &middot; SupervisorMatch{% endblock %}
+{% block content %}
+<div class="row space-between">
+  <div>
+    <h1 class="page-title">{{ current_user.title }} {{ current_user.name }}</h1>
+    <p class="subtitle">Your supervisor profile</p>
+  </div>
+  <a class="btn btn-ghost" href="{{ url_for('staff.profile') }}">Edit profile</a>
+</div>
+
+{% if pending %}
+<div class="card">
+  <strong>{{ pending|length }}</strong> pending supervision request(s) awaiting your response.
+</div>
+{% endif %}
+
+<div class="card">
+  <h3>Areas of interest</h3>
+  <p class="muted">Topics you supervise. Students search and are matched by these.</p>
+  {% if areas %}
+    {% for area in areas %}
+      <form class="inline-form" method="post"
+            action="{{ url_for('staff.edit_area', area_id=area.id) }}"
+            style="margin-bottom:8px;">
+        <input type="text" name="name" value="{{ area.name }}">
+        <button class="btn btn-ghost btn-sm" type="submit">Save</button>
+        <button class="btn btn-danger btn-sm" type="submit" formmethod="post"
+                formaction="{{ url_for('staff.delete_area', area_id=area.id) }}">Delete</button>
+      </form>
+    {% endfor %}
+  {% else %}
+    <p class="empty">No areas of interest yet.</p>
+  {% endif %}
+
+  <form class="inline-form" method="post" action="{{ url_for('staff.add_area') }}"
+        style="margin-top:12px;">
+    <input type="text" name="name" placeholder="e.g. Graph theory" required>
+    <button class="btn btn-primary btn-sm" type="submit">Add area</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Project ideas</h3>
+  <p class="muted">Projects you propose. Students can request supervision on these.</p>
+  {% if ideas %}
+    {% for idea in ideas %}
+      <div class="card" style="box-shadow:none;">
+        <form method="post" action="{{ url_for('staff.edit_idea', idea_id=idea.id) }}">
+          <label>Title</label>
+          <input type="text" name="title" value="{{ idea.title }}" required>
+          <label>Description</label>
+          <textarea name="description" required>{{ idea.description }}</textarea>
+          <div class="row">
+            <div style="flex:1;">
+              <label>Topic tag</label>
+              <input type="text" name="area_name" value="{{ idea.area_name or '' }}"
+                     placeholder="e.g. Data analysis">
+            </div>
+            <div style="flex:1;">
+              <label>Status</label>
+              <select name="status">
+                <option value="open" {{ 'selected' if idea.status == 'open' }}>Open</option>
+                <option value="taken" {{ 'selected' if idea.status == 'taken' }}>Taken</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <button class="btn btn-ghost btn-sm" type="submit">Save changes</button>
+            <button class="btn btn-danger btn-sm" type="submit"
+                    formaction="{{ url_for('staff.delete_idea', idea_id=idea.id) }}">Delete</button>
+          </div>
+        </form>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="empty">No project ideas yet.</p>
+  {% endif %}
+
+  <div class="card" style="box-shadow:none; border-style:dashed;">
+    <h4>Add a project idea</h4>
+    <form method="post" action="{{ url_for('staff.add_idea') }}">
+      <label>Title</label>
+      <input type="text" name="title" placeholder="Project title" required>
+      <label>Description</label>
+      <textarea name="description" placeholder="What the project involves" required></textarea>
+      <label>Topic tag <span class="muted">(optional)</span></label>
+      <input type="text" name="area_name" placeholder="e.g. Software maintenance">
+      <button class="btn btn-primary btn-sm" type="submit">Add project idea</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

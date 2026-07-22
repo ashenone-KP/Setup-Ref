@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>Find the right final-year project supervisor</h1>
+  <p>
+    Staff publish their areas of interest and project ideas. Students browse,
+    search by topic, and request supervision &mdash; all in one place.
+  </p>
+  <div class="row">
+    <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Get started</a>
+    <a class="btn btn-ghost" href="{{ url_for('auth.login') }}">Log in</a>
+  </div>
+</section>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h3>For staff</h3>
+    <p class="muted">
+      Manage your research and teaching areas, propose project ideas, set how
+      many students you can supervise, and respond to supervision requests.
+    </p>
+  </div>
+  <div class="card">
+    <h3>For students</h3>
+    <p class="muted">
+      Search staff by topic, explore their project ideas, bookmark favourites,
+      get recommended supervisors, and send a supervision request.
+    </p>
+  </div>
+</div>
+{% endblock %}

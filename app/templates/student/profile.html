@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ staff.name }} &middot; SupervisorMatch{% endblock %}
+{% block content %}
+<a class="muted" href="{{ url_for('student.browse') }}">&larr; Back to search</a>
+
+<div class="row space-between" style="margin-top:8px;">
+  <div>
+    <h1 class="page-title">{{ staff.title }} {{ staff.name }}</h1>
+    <p class="subtitle">
+      Supervising {{ staff.accepted_count() }} of {{ staff.capacity }} students
+      {% if staff.has_capacity() %}
+        <span class="pill pill-open">Accepting students</span>
+      {% else %}
+        <span class="pill pill-taken">At capacity</span>
+      {% endif %}
+    </p>
+  </div>
+</div>
+
+{% if staff.bio %}
+<div class="card"><p>{{ staff.bio }}</p></div>
+{% endif %}
+
+<div class="card">
+  <h3>Areas of interest</h3>
+  {% if staff.areas %}
+    {% for a in staff.areas %}<span class="tag">{{ a.name }}</span>{% endfor %}
+  {% else %}
+    <p class="empty">No areas listed.</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h3>Project ideas</h3>
+  {% if staff.project_ideas %}
+    {% for idea in staff.project_ideas %}
+      <div class="card" style="box-shadow:none;">
+        <div class="row space-between">
+          <h4 style="margin:0;">{{ idea.title }}</h4>
+          <span class="pill {{ 'pill-open' if idea.status == 'open' else 'pill-taken' }}">
+            {{ idea.status|capitalize }}
+          </span>
+        </div>
+        <p>{{ idea.description }}</p>
+        {% if idea.area_name %}<span class="tag">{{ idea.area_name }}</span>{% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="empty">No project ideas listed.</p>
+  {% endif %}
+</div>
+
+<p class="muted">Supervision requests &amp; bookmarks are coming next.</p>
+{% endblock %}

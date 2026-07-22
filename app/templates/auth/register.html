@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Sign up &middot; SupervisorMatch{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <h1 class="page-title">Create your account</h1>
+  <div class="card">
+    <form method="post" action="{{ url_for('auth.register') }}">
+      <label>I am a&hellip;</label>
+      <div class="role-toggle">
+        <label>
+          <input type="radio" name="role" value="student"
+                 {{ 'checked' if role != 'staff' else '' }}>
+          <span>Student</span>
+        </label>
+        <label>
+          <input type="radio" name="role" value="staff"
+                 {{ 'checked' if role == 'staff' else '' }}>
+          <span>Staff</span>
+        </label>
+      </div>
+
+      <label for="name">Full name</label>
+      <input type="text" id="name" name="name" value="{{ name or '' }}" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" value="{{ email or '' }}" required>
+
+      <label for="password">Password <span class="muted">(min 6 characters)</span></label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit" class="btn btn-primary">Create account</button>
+    </form>
+  </div>
+  <p class="muted">Already registered? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Not found &middot; SupervisorMatch{% endblock %}
+{% block content %}
+<div class="hero">
+  <h1>404 &mdash; Not found</h1>
+  <p>We couldn't find the page you were looking for.</p>
+  <a class="btn btn-primary" href="{{ url_for('main.index') }}">Go home</a>
+</div>
+{% endblock %}
