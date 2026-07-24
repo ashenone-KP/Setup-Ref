@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% from 'partials/_brand.html' import brand_mark with context %}
 {% block title %}Sign up &middot; SupervisorMatch{% endblock %}
 
 {% block body %}
 <div class="auth-page">
   <div class="auth-wrap">
     <div class="auth-brand">
-      <div class="brand-tile">SM</div>
+      {{ brand_mark(52) }}
       <h1>Create your account</h1>
       <p>Join as a student or a member of staff</p>
     </div>

@@ -1,0 +1,12 @@
+{# Brand mark: UoP logo if present, else the "SM" fallback tile.
+   Import WITH CONTEXT so brand_logo_url (context processor) is visible:
+   {% from 'partials/_brand.html' import brand_mark with context %} #}
+{% macro brand_mark(size=38) -%}
+  {%- if brand_logo_url -%}
+    <span class="logo-chip" style="height:{{ size }}px;">
+      <img class="brand-logo" src="{{ brand_logo_url }}" alt="University of Portsmouth">
+    </span>
+  {%- else -%}
+    <span class="brand-tile" style="width:{{ size }}px;height:{{ size }}px;">SM</span>
+  {%- endif -%}
+{%- endmacro %}

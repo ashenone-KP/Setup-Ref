@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
+{% from 'partials/_brand.html' import brand_mark with context %}
 {% block title %}Not found &middot; SupervisorMatch{% endblock %}
 {% block body %}
 <div class="auth-page">
   <div class="auth-wrap" style="text-align:center;">
-    <div class="brand-tile" style="width:52px;height:52px;font-size:1.2rem;margin:0 auto 16px;border-radius:13px;">SM</div>
+    <div style="margin-bottom:16px;">{{ brand_mark(52) }}</div>
     <h1 style="font-size:2rem;">404 &mdash; Not found</h1>
     <p class="muted" style="margin:10px 0 22px;">We couldn't find the page you were looking for.</p>
     <a class="btn btn-primary" href="{{ url_for('main.index') }}">Go home</a>

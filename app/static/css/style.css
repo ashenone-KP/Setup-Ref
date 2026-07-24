@@ -14,7 +14,7 @@
   --brand-accent: #d2cd57;      /* chartreuse — sparing highlight */
 
   /* --- Neutrals (shadcn) --- */
-  --bg: #ffffff;
+  --bg: #eceef3;          /* soft grey page base so white cards lift off it */
   --surface: #ffffff;
   --ink: #1c1a1e;
   --muted: #717182;
@@ -211,6 +211,26 @@ input:focus, textarea:focus, select:focus {
 .avatar-sm { width: 32px; height: 32px; font-size: 0.8rem; }
 .avatar-azure { background: #e2f2fd; color: var(--brand-azure-ink); }
 
+/* Removable area chips */
+.chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--brand-purple-050); color: var(--brand-purple);
+  padding: 5px 6px 5px 12px; border-radius: 999px;
+  font-size: 0.85rem; font-weight: 500;
+}
+.chip form { display: inline-flex; margin: 0; }
+.chip-x {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; padding: 0; border: none; cursor: pointer;
+  background: rgba(53, 0, 52, 0.08); color: var(--brand-purple); border-radius: 999px;
+}
+.chip-x:hover { background: var(--destructive-bg); color: var(--destructive); }
+.chip-x svg { width: 12px; height: 12px; }
+
+/* Symmetric two-up (landing) */
+.duo-grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; max-width: 760px; margin: 0 auto; }
+
 /* =========================================================================
    Flash messages
    ========================================================================= */
@@ -247,6 +267,15 @@ input:focus, textarea:focus, select:focus {
   background: linear-gradient(135deg, var(--brand-azure), #6ec6ff);
   color: #04263c; font-weight: 800; font-size: 0.95rem; letter-spacing: -.02em;
 }
+
+/* UoP logo (shown when app/static/img/uop-logo.* exists) */
+.logo-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; border-radius: 10px; padding: 5px 9px;
+  box-sizing: border-box; flex: none; box-shadow: var(--shadow-sm);
+}
+.logo-chip .brand-logo { height: 100%; width: auto; max-width: 170px; object-fit: contain; display: block; }
+.auth-brand .logo-chip { margin: 0 auto 12px; }
 .sidebar-brand .brand-name { font-weight: 700; font-size: 1.02rem; color: #fff; line-height: 1.1; }
 .sidebar-brand .brand-sub { font-size: 0.72rem; color: rgba(255,255,255,0.6); }
 
@@ -286,10 +315,13 @@ input:focus, textarea:focus, select:focus {
 }
 .topbar h1 { font-size: 1.15rem; font-weight: 600; }
 .topbar-right { display: flex; align-items: center; gap: 12px; }
-.hamburger {
-  display: none; background: transparent; border: 1px solid var(--line-strong);
+.nav-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm); padding: 7px; cursor: pointer; color: var(--ink);
 }
+.nav-toggle:hover { background: var(--hover); }
+.nav-toggle svg { width: 18px; height: 18px; }
 .content { padding: 26px; max-width: 1080px; width: 100%; }
 
 /* Backdrop for mobile drawer */
@@ -375,6 +407,22 @@ input:focus, textarea:focus, select:focus {
 /* =========================================================================
    Responsive
    ========================================================================= */
+/* Collapsed sidebar (desktop icon-only rail) */
+@media (min-width: 861px) {
+  .app-shell.sidebar-collapsed { grid-template-columns: 68px 1fr; }
+  .sidebar-collapsed .sidebar-brand { justify-content: center; padding: 18px 8px; }
+  .sidebar-collapsed .sidebar-brand-text,
+  .sidebar-collapsed .sidebar-section,
+  .sidebar-collapsed .nav-item span,
+  .sidebar-collapsed .sidebar-user > div,
+  .sidebar-collapsed .sidebar-footer .btn-outline span { display: none; }
+  .sidebar-collapsed .sidebar-nav { padding: 14px 10px; }
+  .sidebar-collapsed .nav-item { justify-content: center; padding: 10px 0; border-left-color: transparent; }
+  .sidebar-collapsed .nav-item.active { background: rgba(255, 255, 255, 0.14); }
+  .sidebar-collapsed .sidebar-user { justify-content: center; padding: 6px 0 12px; }
+  .sidebar-collapsed .sidebar-footer .btn-outline { justify-content: center; }
+}
+
 @media (max-width: 860px) {
   .app-shell { grid-template-columns: 1fr; }
   .sidebar {
@@ -384,10 +432,9 @@ input:focus, textarea:focus, select:focus {
   }
   .app-shell.nav-open .sidebar { transform: translateX(0); }
   .app-shell.nav-open .backdrop { display: block; }
-  .hamburger { display: inline-flex; }
   .content { padding: 18px; }
   .topbar { padding: 12px 16px; }
-  .feature-row { grid-template-columns: 1fr; }
+  .duo-grid { grid-template-columns: 1fr; }
   .hero { padding: 44px 22px; }
   .hero h1 { font-size: 1.8rem; }
 }

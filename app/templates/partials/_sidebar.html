@@ -1,8 +1,9 @@
 {% from 'partials/_icons.html' import icon %}
+{% from 'partials/_brand.html' import brand_mark with context %}
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <div class="brand-tile">SM</div>
-    <div>
+    {{ brand_mark(38) }}
+    <div class="sidebar-brand-text">
       <div class="brand-name">SupervisorMatch</div>
       <div class="brand-sub">Find your supervisor</div>
     </div>

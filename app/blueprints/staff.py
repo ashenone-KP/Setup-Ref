@@ -8,6 +8,7 @@ from flask import (Blueprint, abort, flash, redirect, render_template, request,
                    url_for)
 from flask_login import current_user, login_required
 
+from ..data.areas import UNIVERSITY_AREAS
 from ..decorators import staff_required
 from ..extensions import db
 from ..models import AreaOfInterest, ProjectIdea
@@ -19,9 +20,12 @@ staff_bp = Blueprint("staff", __name__, url_prefix="/staff")
 @login_required
 @staff_required
 def dashboard():
+    taken = {a.name for a in current_user.areas}
+    available_areas = [a for a in UNIVERSITY_AREAS if a not in taken]
     return render_template(
         "staff/dashboard.html",
         areas=current_user.areas,
+        available_areas=available_areas,
         ideas=current_user.project_ideas,
         pending=[r for r in current_user.received_requests if r.status == "pending"],
     )
@@ -56,29 +60,14 @@ def profile():
 @staff_required
 def add_area():
     name = request.form.get("name", "").strip()
-    if not name:
-        flash("An area of interest needs a name.", "error")
+    if name not in UNIVERSITY_AREAS:
+        flash("Please choose an area from the list.", "error")
     elif any(a.name.lower() == name.lower() for a in current_user.areas):
         flash("That area is already on your profile.", "error")
     else:
         db.session.add(AreaOfInterest(name=name, staff_id=current_user.id))
         db.session.commit()
         flash("Area of interest added.", "success")
-    return redirect(url_for("staff.dashboard"))
-
-
-@staff_bp.route("/areas/<int:area_id>/edit", methods=["POST"])
-@login_required
-@staff_required
-def edit_area(area_id):
-    area = _own_area_or_404(area_id)
-    name = request.form.get("name", "").strip()
-    if not name:
-        flash("An area of interest needs a name.", "error")
-    else:
-        area.name = name
-        db.session.commit()
-        flash("Area of interest updated.", "success")
     return redirect(url_for("staff.dashboard"))
 
 

@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% from 'partials/_icons.html' import icon %}
+{% from 'partials/_brand.html' import brand_mark with context %}
 
 {% block body %}
 <header class="public-header">
   <div class="inner">
     <a class="public-brand" href="{{ url_for('main.index') }}">
-      <span class="brand-tile" style="width:32px;height:32px;font-size:.85rem;">SM</span>
+      {{ brand_mark(30) }}
       SupervisorMatch
     </a>
     <nav class="public-nav">
@@ -28,7 +29,7 @@
     </div>
   </section>
 
-  <div class="grid-cards" style="margin-bottom:24px;">
+  <div class="duo-grid" style="margin-bottom:24px;">
     <div class="card">
       <span class="avatar">{{ icon('user') }}</span>
       <h3 style="margin:12px 0 6px;">For staff</h3>

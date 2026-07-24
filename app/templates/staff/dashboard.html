@@ -24,28 +24,35 @@
 <div class="card">
   <div class="card-header">
     <h3>Areas of interest</h3>
-    <p class="muted small">Topics you supervise. Students search and are matched by these.</p>
+    <p class="muted small">Topics you supervise, from the School of Computing subject list. Students search and are matched by these.</p>
   </div>
 
   {% if areas %}
-    <div class="stack-sm" style="margin-bottom:14px;">
+    <div class="chip-list" style="margin-bottom:16px;">
       {% for area in areas %}
-        <form class="inline-form" method="post" action="{{ url_for('staff.edit_area', area_id=area.id) }}">
-          <input type="text" name="name" value="{{ area.name }}">
-          <button class="btn btn-ghost btn-sm" type="submit" title="Save">{{ icon('check') }}</button>
-          <button class="btn btn-danger btn-sm" type="submit" title="Delete"
-                  formaction="{{ url_for('staff.delete_area', area_id=area.id) }}">{{ icon('trash') }}</button>
-        </form>
+        <span class="chip">
+          {{ area.name }}
+          <form method="post" action="{{ url_for('staff.delete_area', area_id=area.id) }}">
+            <button type="submit" class="chip-x" aria-label="Remove {{ area.name }}">{{ icon('x') }}</button>
+          </form>
+        </span>
       {% endfor %}
     </div>
   {% else %}
     <p class="empty">No areas of interest yet.</p>
   {% endif %}
 
-  <form class="inline-form" method="post" action="{{ url_for('staff.add_area') }}">
-    <input type="text" name="name" placeholder="e.g. Graph theory" required>
-    <button class="btn btn-primary btn-sm" type="submit">{{ icon('plus') }}<span>Add area</span></button>
-  </form>
+  {% if available_areas %}
+    <form class="inline-form" method="post" action="{{ url_for('staff.add_area') }}">
+      <select name="name" required aria-label="Area of interest">
+        <option value="" disabled selected>Choose an area to add&hellip;</option>
+        {% for a in available_areas %}<option value="{{ a }}">{{ a }}</option>{% endfor %}
+      </select>
+      <button class="btn btn-primary btn-sm" type="submit">{{ icon('plus') }}<span>Add area</span></button>
+    </form>
+  {% else %}
+    <p class="muted small">All available areas have been added.</p>
+  {% endif %}
 </div>
 
 <div class="card">

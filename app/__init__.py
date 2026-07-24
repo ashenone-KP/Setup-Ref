@@ -5,7 +5,7 @@ fresh app with a disposable database, and keeps configuration in one place.
 """
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 
 from .config import Config
 from .extensions import db, login_manager
@@ -41,11 +41,27 @@ def create_app(config_class=Config):
     app.register_blueprint(student_bp)
 
     register_error_handlers(app)
+    register_brand(app)
 
     with app.app_context():
         db.create_all()
 
     return app
+
+
+def register_brand(app):
+    """Expose ``brand_logo_url`` to templates if a UoP logo file is present.
+
+    Looks for app/static/img/uop-logo.* so the real logo is picked up
+    automatically once added; templates fall back to a wordmark otherwise.
+    """
+    @app.context_processor
+    def inject_brand():
+        for ext in ("svg", "png", "jpg", "jpeg", "webp"):
+            filename = f"img/uop-logo.{ext}"
+            if os.path.exists(os.path.join(app.static_folder, filename)):
+                return {"brand_logo_url": url_for("static", filename=filename)}
+        return {"brand_logo_url": None}
 
 
 def register_error_handlers(app):

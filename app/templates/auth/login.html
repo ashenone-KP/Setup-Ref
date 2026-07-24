@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% from 'partials/_icons.html' import icon %}
+{% from 'partials/_brand.html' import brand_mark with context %}
 {% block title %}Log in &middot; SupervisorMatch{% endblock %}
 
 {% block body %}
 <div class="auth-page">
   <div class="auth-wrap">
     <div class="auth-brand">
-      <div class="brand-tile">SM</div>
+      {{ brand_mark(52) }}
       <h1>SupervisorMatch</h1>
       <p>Final-year project supervisor matching</p>
     </div>
@@ -31,12 +31,6 @@
     </div>
 
     <p class="auth-alt">No account? <a href="{{ url_for('auth.register') }}">Sign up</a></p>
-
-    <div class="feature-row">
-      <div class="tile">{{ icon('shield') }}<span>Role-based access</span></div>
-      <div class="tile">{{ icon('search') }}<span>Search by topic</span></div>
-      <div class="tile">{{ icon('send') }}<span>Request supervision</span></div>
-    </div>
   </div>
 </div>
 {% endblock %}

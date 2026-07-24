@@ -14,48 +14,48 @@ STAFF = [
         "name": "Claudia Iacob", "title": "Dr", "email": "claudia@uni.ac.uk",
         "bio": "Human-computer interaction and software engineering education.",
         "capacity": 5,
-        "areas": ["Human-computer interaction", "Software engineering", "Requirements engineering"],
+        "areas": ["HCI", "Software Engineering", "Systems Analysis"],
         "ideas": [
             ("Usability of student-facing university tools",
              "Evaluate and redesign a university web tool using HCI methods.",
-             "Human-computer interaction"),
+             "HCI"),
             ("A recommender for module choices",
              "Build and test a recommender that suggests optional modules.",
-             "Software engineering"),
+             "Software Engineering"),
         ],
     },
     {
         "name": "David Okafor", "title": "Dr", "email": "david@uni.ac.uk",
         "bio": "Graph theory and algorithms for large networks.",
         "capacity": 3,
-        "areas": ["Graph theory", "Algorithms", "Data analysis"],
+        "areas": ["Algorithms", "Computation / Maths", "Data Analytics"],
         "ideas": [
             ("Community detection in social graphs",
              "Implement and compare community-detection algorithms on real data.",
-             "Graph theory"),
+             "Algorithms"),
         ],
     },
     {
         "name": "Priya Nair", "title": "Prof", "email": "priya@uni.ac.uk",
         "bio": "Software maintenance, testing and program analysis.",
         "capacity": 4,
-        "areas": ["Software maintenance", "Software testing", "Data analysis"],
+        "areas": ["Software Engineering", "Databases", "Cyber Security / Security"],
         "ideas": [
             ("Automated test generation for legacy code",
              "Explore tools that generate unit tests for an untested codebase.",
-             "Software testing"),
+             "Software Engineering"),
             ("Mining bug reports for maintenance insights",
              "Analyse an open-source issue tracker to find maintenance patterns.",
-             "Software maintenance"),
+             "Databases"),
         ],
     },
 ]
 
 STUDENTS = [
     {"name": "Sam Taylor", "email": "sam@uni.ac.uk",
-     "interests": ["Software testing", "Data analysis"]},
+     "interests": ["Software Engineering", "Data Analytics"]},
     {"name": "Mia Chen", "email": "mia@uni.ac.uk",
-     "interests": ["Graph theory", "Algorithms"]},
+     "interests": ["Algorithms", "Computation / Maths"]},
 ]
 
 
