@@ -16,9 +16,10 @@ instance/
 *.db
 *.sqlite3
 
-# Editor / OS
+# Editor / OS / tooling
 .vscode/
 .idea/
+.claude/
 .DS_Store
 Thumbs.db
 
