@@ -1,0 +1,44 @@
+{% extends 'layouts/dashboard.html' %}
+{% from 'partials/_icons.html' import icon %}
+{% block title %}My interests &middot; SupervisorMatch{% endblock %}
+{% block page_title %}My interests{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h2>My interests</h2>
+  <p class="muted">Pick the subjects you'd like to work in &mdash; we use these to recommend supervisors.</p>
+</div>
+
+<div class="card">
+  {% if interests %}
+    <div class="chip-list" style="margin-bottom:16px;">
+      {% for i in interests %}
+        <span class="chip">
+          {{ i.name }}
+          <form method="post" action="{{ url_for('student.delete_interest', interest_id=i.id) }}">
+            <button type="submit" class="chip-x" aria-label="Remove {{ i.name }}">{{ icon('x') }}</button>
+          </form>
+        </span>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty">No interests yet.</p>
+  {% endif %}
+
+  {% if available %}
+    <form class="inline-form" method="post" action="{{ url_for('student.add_interest') }}">
+      <select name="name" required aria-label="Interest">
+        <option value="" disabled selected>Choose an interest to add&hellip;</option>
+        {% for a in available %}<option value="{{ a }}">{{ a }}</option>{% endfor %}
+      </select>
+      <button class="btn btn-primary btn-sm" type="submit">{{ icon('plus') }}<span>Add interest</span></button>
+    </form>
+  {% else %}
+    <p class="muted small">You've added all available subjects.</p>
+  {% endif %}
+</div>
+
+<p class="muted small" style="margin-top:14px;">
+  <a href="{{ url_for('student.recommended') }}">See your recommendations &rarr;</a>
+</p>
+{% endblock %}

@@ -13,12 +13,13 @@
 </div>
 
 {% if pending %}
-<div class="card" style="border-left:3px solid var(--brand-azure);">
+<a class="card" href="{{ url_for('staff.requests_list') }}"
+   style="display:block; border-left:3px solid var(--brand-azure); text-decoration:none; color:inherit;">
   <div class="row" style="gap:10px;">
     <span class="count-badge">{{ pending|length }}</span>
-    <span>pending supervision request(s) awaiting your response.</span>
+    <span>pending supervision request(s) &mdash; review &rarr;</span>
   </div>
-</div>
+</a>
 {% endif %}
 
 <div class="card">

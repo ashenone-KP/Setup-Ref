@@ -1,0 +1,32 @@
+{% extends 'layouts/dashboard.html' %}
+{% block title %}My requests &middot; SupervisorMatch{% endblock %}
+{% block page_title %}My requests{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h2>My requests</h2>
+  <p class="muted">Track the supervision requests you've sent.</p>
+</div>
+
+{% if requests %}
+  <div class="stack-sm">
+    {% for r in requests %}
+      <div class="card">
+        <div class="row-between">
+          <div>
+            <strong>{{ r.staff.title }} {{ r.staff.name }}</strong>
+            {% if r.project_idea %}<div class="muted small">Project: {{ r.project_idea.title }}</div>{% endif %}
+            {% if r.message %}<p class="small" style="margin-top:6px;">{{ r.message }}</p>{% endif %}
+          </div>
+          <span class="pill {% if r.status == 'accepted' %}pill-open{% elif r.status == 'declined' %}pill-taken{% else %}pill-pending{% endif %}">
+            {{ r.status|capitalize }}
+          </span>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card"><p class="empty" style="margin:0;">You haven't sent any requests yet.
+    <a href="{{ url_for('student.browse') }}">Find a supervisor</a>.</p></div>
+{% endif %}
+{% endblock %}

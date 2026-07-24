@@ -1,0 +1,78 @@
+{# Full supervisor detail, used in the browse popup and on the profile page.
+   Params: member, is_bookmarked, has_pending, accepted (student's accepted
+   request or None), show_header (name row — off inside the modal). #}
+{% from 'partials/_icons.html' import icon %}
+
+{% macro staff_detail(member, is_bookmarked=False, has_pending=False, accepted=None, show_header=True) %}
+{% set open = member.capacity - member.accepted_count() %}
+<div class="detail">
+  <div class="row-between" style="align-items:flex-start; gap:12px;">
+    <div class="row" style="gap:12px; align-items:center;">
+      {% if show_header %}
+        <span class="avatar" style="width:52px;height:52px;font-size:1.15rem;">{{ member.name[:1]|upper }}</span>
+      {% endif %}
+      <div>
+        {% if show_header %}<h3>{{ member.title }} {{ member.name }}</h3>{% endif %}
+        <p class="muted small" style="margin-top:4px;">
+          Supervising {{ member.accepted_count() }} of {{ member.capacity }}
+          {% if open > 0 %}<span class="pill pill-open">{{ open }} slot{{ 's' if open != 1 }} open</span>
+          {% else %}<span class="pill pill-taken">Full</span>{% endif %}
+        </p>
+      </div>
+    </div>
+    <form method="post" action="{{ url_for('student.toggle_bookmark', staff_id=member.id) }}">
+      <button type="submit" class="btn btn-outline btn-sm {{ 'is-saved' if is_bookmarked }}">
+        {{ icon('star') }}<span>{{ 'Saved' if is_bookmarked else 'Save' }}</span>
+      </button>
+    </form>
+  </div>
+
+  {% if member.bio %}<p style="margin-top:12px;">{{ member.bio }}</p>{% endif %}
+
+  <h4 style="margin:18px 0 8px;">{{ member.areas|length }} topics</h4>
+  {% if member.areas %}
+    {% for a in member.areas %}<span class="tag">{{ a.name }}</span>{% endfor %}
+  {% else %}<p class="empty">No topics listed.</p>{% endif %}
+
+  <h4 style="margin:18px 0 8px;">{{ member.project_ideas|length }} project ideas</h4>
+  {% if member.project_ideas %}
+    <div class="stack-sm">
+      {% for idea in member.project_ideas %}
+        <div class="card card-flat" style="border:1px solid var(--line);">
+          <div class="row-between">
+            <strong>{{ idea.title }}</strong>
+            <span class="pill {{ 'pill-open' if idea.status == 'open' else 'pill-taken' }}">{{ idea.status|capitalize }}</span>
+          </div>
+          <p class="small" style="margin-top:6px;">{{ idea.description }}</p>
+          {% if idea.area_name %}<div style="margin-top:8px;"><span class="tag">{{ idea.area_name }}</span></div>{% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}<p class="empty">No project ideas listed.</p>{% endif %}
+
+  <div class="card card-dashed" style="margin-top:18px;">
+    {% if accepted and accepted.staff_id == member.id %}
+      <p class="muted"><strong>You're matched with this supervisor.</strong></p>
+    {% elif accepted %}
+      <p class="muted">You already have a confirmed supervisor, so new requests are disabled.</p>
+    {% elif has_pending %}
+      <p class="muted">Your request to this supervisor is <strong>pending</strong>.</p>
+    {% else %}
+      <h4 style="margin-bottom:10px;">Request supervision</h4>
+      <form method="post" action="{{ url_for('student.send_request', staff_id=member.id) }}">
+        {% set open_ideas = member.project_ideas|selectattr('status', 'equalto', 'open')|list %}
+        {% if open_ideas %}
+          <label>Project idea <span class="muted small">(optional)</span></label>
+          <select name="project_idea_id">
+            <option value="">General enquiry</option>
+            {% for idea in open_ideas %}<option value="{{ idea.id }}">{{ idea.title }}</option>{% endfor %}
+          </select>
+        {% endif %}
+        <label>Message</label>
+        <textarea name="message" placeholder="Briefly explain your interest and background…"></textarea>
+        <button class="btn btn-primary btn-sm" type="submit">{{ icon('send') }}<span>Send request</span></button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endmacro %}

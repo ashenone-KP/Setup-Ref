@@ -42,11 +42,28 @@ def create_app(config_class=Config):
 
     register_error_handlers(app)
     register_brand(app)
+    register_nav(app)
 
     with app.app_context():
         db.create_all()
 
     return app
+
+
+def register_nav(app):
+    """Expose a pending-requests count so the staff sidebar can show a badge."""
+    from flask_login import current_user
+
+    from .models import SupervisionRequest
+
+    @app.context_processor
+    def inject_nav():
+        count = 0
+        if current_user.is_authenticated and current_user.is_staff:
+            count = SupervisionRequest.query.filter_by(
+                staff_id=current_user.id, status="pending"
+            ).count()
+        return {"staff_pending_count": count}
 
 
 def register_brand(app):

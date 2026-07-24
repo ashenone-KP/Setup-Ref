@@ -1,0 +1,42 @@
+{# Supervisor card + its click-to-open popup. Reused by browse/saved/recommended.
+   Params: member, is_bookmarked, has_pending, accepted, note (optional pill). #}
+{% from 'partials/_icons.html' import icon %}
+{% from 'partials/_staff_detail.html' import staff_detail %}
+
+{% macro staff_card(member, is_bookmarked=False, has_pending=False, accepted=None, note='') %}
+{% set open = member.capacity - member.accepted_count() %}
+<div class="card staff-card" data-modal="staff-{{ member.id }}" tabindex="0" role="button"
+     aria-label="View {{ member.name }}">
+  <div class="row" style="gap:12px; flex-wrap:nowrap; align-items:flex-start;">
+    <span class="avatar">{{ member.name[:1]|upper }}</span>
+    <div style="min-width:0; flex:1;">
+      <h3 style="margin-bottom:4px;">{{ member.title }} {{ member.name }}</h3>
+      {% if open > 0 %}<span class="pill pill-open">{{ open }} slot{{ 's' if open != 1 }} open</span>
+      {% else %}<span class="pill pill-taken">Full</span>{% endif %}
+      {% if note %}<span class="pill pill-note">{{ note }}</span>{% endif %}
+    </div>
+    <form method="post" action="{{ url_for('student.toggle_bookmark', staff_id=member.id) }}"
+          onclick="event.stopPropagation();">
+      <button type="submit" class="icon-btn {{ 'is-saved' if is_bookmarked }}"
+              aria-label="{{ 'Remove bookmark' if is_bookmarked else 'Save' }}">{{ icon('star') }}</button>
+    </form>
+  </div>
+  <div class="tag-row" style="margin-top:10px;">
+    {% for a in member.areas[:5] %}<span class="tag">{{ a.name }}</span>{% endfor %}
+    {% if member.areas|length > 5 %}<span class="tag tag-more">+{{ member.areas|length - 5 }} more</span>{% endif %}
+  </div>
+  <p class="muted small" style="margin-top:12px;">
+    {{ member.areas|length }} topics &middot; {{ member.project_ideas|length }} ideas
+  </p>
+</div>
+
+<dialog class="modal" id="staff-{{ member.id }}">
+  <div class="modal-head">
+    <strong>{{ member.title }} {{ member.name }}</strong>
+    <button class="modal-close" data-close aria-label="Close">{{ icon('x') }}</button>
+  </div>
+  <div class="modal-body">
+    {{ staff_detail(member, is_bookmarked, has_pending, accepted, false) }}
+  </div>
+</dialog>
+{% endmacro %}

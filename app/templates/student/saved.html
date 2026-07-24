@@ -1,0 +1,22 @@
+{% extends 'layouts/dashboard.html' %}
+{% from 'partials/_staff_card.html' import staff_card with context %}
+{% block title %}Saved &middot; SupervisorMatch{% endblock %}
+{% block page_title %}Saved supervisors{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h2>Saved supervisors</h2>
+  <p class="muted">Your shortlist. Click a card to view details or send a request.</p>
+</div>
+
+{% if staff %}
+  <div class="grid-cards">
+    {% for member in staff %}
+      {{ staff_card(member, member.id in bookmarked_ids, member.id in pending_ids, accepted) }}
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card"><p class="empty" style="margin:0;">No saved supervisors yet.
+    <a href="{{ url_for('student.browse') }}">Find one</a>.</p></div>
+{% endif %}
+{% endblock %}

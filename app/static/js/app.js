@@ -35,3 +35,25 @@
     }
   });
 })();
+
+// Supervisor popups: clicking a card opens its <dialog>.
+(function () {
+  document.querySelectorAll(".staff-card").forEach(function (card) {
+    var dlg = document.getElementById(card.getAttribute("data-modal"));
+    if (!dlg || !dlg.showModal) return;
+    card.addEventListener("click", function () { dlg.showModal(); });
+    card.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); dlg.showModal(); }
+    });
+  });
+
+  document.querySelectorAll("dialog.modal").forEach(function (dlg) {
+    dlg.querySelectorAll("[data-close]").forEach(function (btn) {
+      btn.addEventListener("click", function () { dlg.close(); });
+    });
+    // Click on the backdrop (the dialog element itself) closes it.
+    dlg.addEventListener("click", function (e) {
+      if (e.target === dlg) dlg.close();
+    });
+  });
+})();

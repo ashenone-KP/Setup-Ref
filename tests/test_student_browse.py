@@ -51,3 +51,12 @@ def test_staff_cannot_access_student_browse(client):
     login(client, staff)
     resp = client.get("/student/browse")
     assert resp.status_code == 403
+
+
+def test_browse_card_shows_topic_count_and_slots(client):
+    _make_staff("a@example.com", "Ada Lovelace", ["Algorithms", "Web"])
+    student = create_user(role=ROLE_STUDENT, email="stud@example.com")
+    login(client, student)
+    body = client.get("/student/browse").data.decode()
+    assert "2 topics" in body       # topic count from the staff's areas
+    assert "slot" in body           # open-slots pill (capacity 4, 0 accepted)

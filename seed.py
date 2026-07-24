@@ -6,8 +6,8 @@ ideas) and a couple of students with interests.
 """
 from app import create_app
 from app.extensions import db
-from app.models import (AreaOfInterest, Interest, ProjectIdea, ROLE_STAFF,
-                        ROLE_STUDENT, User)
+from app.models import (AreaOfInterest, Bookmark, Interest, ProjectIdea,
+                        ROLE_STAFF, ROLE_STUDENT, SupervisionRequest, User)
 
 STAFF = [
     {
@@ -89,9 +89,28 @@ def seed():
                 db.session.add(Interest(name=interest, student_id=student.id))
 
         db.session.commit()
+
+        # A couple of demo requests + bookmarks so the states look populated.
+        by_email = {u.email: u for u in User.query.all()}
+        sam = by_email["sam@uni.ac.uk"]
+        mia = by_email["mia@uni.ac.uk"]
+        db.session.add_all([
+            SupervisionRequest(
+                student_id=sam.id, staff_id=by_email["david@uni.ac.uk"].id,
+                message="I'd love to work on graph algorithms.", status="pending"),
+            SupervisionRequest(
+                student_id=mia.id, staff_id=by_email["priya@uni.ac.uk"].id,
+                message="Interested in a database-focused project.", status="pending"),
+            Bookmark(student_id=sam.id, staff_id=by_email["claudia@uni.ac.uk"].id),
+            Bookmark(student_id=mia.id, staff_id=by_email["david@uni.ac.uk"].id),
+        ])
+        db.session.commit()
+
         print("Seeded:", User.query.count(), "users,",
               AreaOfInterest.query.count(), "areas,",
-              ProjectIdea.query.count(), "project ideas.")
+              ProjectIdea.query.count(), "project ideas,",
+              SupervisionRequest.query.count(), "requests,",
+              Bookmark.query.count(), "bookmarks.")
         print("All demo accounts use the password: password123")
 
 

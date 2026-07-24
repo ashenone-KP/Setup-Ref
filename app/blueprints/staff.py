@@ -11,7 +11,7 @@ from flask_login import current_user, login_required
 from ..data.areas import UNIVERSITY_AREAS
 from ..decorators import staff_required
 from ..extensions import db
-from ..models import AreaOfInterest, ProjectIdea
+from ..models import AreaOfInterest, ProjectIdea, SupervisionRequest
 
 staff_bp = Blueprint("staff", __name__, url_prefix="/staff")
 
@@ -133,7 +133,63 @@ def delete_idea(idea_id):
     return redirect(url_for("staff.dashboard"))
 
 
+# --- Supervision requests ----------------------------------------------------
+
+@staff_bp.route("/requests")
+@login_required
+@staff_required
+def requests_list():
+    received = (SupervisionRequest.query
+                .filter_by(staff_id=current_user.id)
+                .order_by(SupervisionRequest.created_at.desc()).all())
+    return render_template(
+        "staff/requests.html",
+        pending=[r for r in received if r.status == "pending"],
+        handled=[r for r in received if r.status != "pending"],
+    )
+
+
+@staff_bp.route("/requests/<int:req_id>/accept", methods=["POST"])
+@login_required
+@staff_required
+def accept_request(req_id):
+    req = _own_request_or_404(req_id)
+    if req.status != "pending":
+        flash("That request has already been handled.", "error")
+    elif not current_user.has_capacity():
+        flash("You are at capacity and can't accept more students.", "error")
+    else:
+        req.status = "accepted"
+        # If the request named one of this staff member's ideas, mark it taken.
+        if req.project_idea and req.project_idea.staff_id == current_user.id:
+            req.project_idea.status = "taken"
+        db.session.commit()
+        flash(f"Accepted {req.student.name}.", "success")
+    return redirect(url_for("staff.requests_list"))
+
+
+@staff_bp.route("/requests/<int:req_id>/decline", methods=["POST"])
+@login_required
+@staff_required
+def decline_request(req_id):
+    req = _own_request_or_404(req_id)
+    if req.status != "pending":
+        flash("That request has already been handled.", "error")
+    else:
+        req.status = "declined"
+        db.session.commit()
+        flash("Request declined.", "success")
+    return redirect(url_for("staff.requests_list"))
+
+
 # --- Helpers -----------------------------------------------------------------
+
+def _own_request_or_404(req_id):
+    req = db.session.get(SupervisionRequest, req_id)
+    if req is None or req.staff_id != current_user.id:
+        abort(404)
+    return req
+
 
 def _own_area_or_404(area_id):
     area = db.session.get(AreaOfInterest, area_id)

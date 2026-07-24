@@ -195,12 +195,52 @@ input:focus, textarea:focus, select:focus {
 }
 .pill-open { background: var(--success-bg); color: var(--success); }
 .pill-taken { background: #eef1f5; color: var(--muted); }
+.pill-pending { background: #fff4e0; color: #9a6b00; }
+.pill-note { background: #e2f2fd; color: var(--brand-azure-ink); }
 .count-badge {
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 20px; height: 20px; padding: 0 6px;
   background: var(--brand-azure); color: #fff;
   border-radius: 999px; font-size: 0.72rem; font-weight: 700;
 }
+.nav-badge { margin-left: auto; }
+
+/* Clickable supervisor cards */
+.staff-card { cursor: pointer; transition: box-shadow .15s ease, border-color .15s ease; }
+.staff-card:hover { box-shadow: var(--shadow); border-color: var(--line-strong); }
+.staff-card:focus-visible { outline: 2px solid var(--brand-azure); outline-offset: 2px; }
+.tag-row { display: flex; flex-wrap: wrap; }
+.tag-more { background: #eef1f5; color: var(--muted); }
+
+/* Star / icon button */
+.icon-btn {
+  background: transparent; border: none; cursor: pointer;
+  color: var(--muted-2); padding: 5px; border-radius: 8px; line-height: 0;
+}
+.icon-btn:hover { background: var(--hover); color: var(--brand-azure-ink); }
+.icon-btn.is-saved { color: #e0a400; }
+.icon-btn svg { width: 20px; height: 20px; }
+.btn.is-saved { background: #fdf6e3; border-color: #e8c66a; color: #9a6b00; }
+
+/* Popup dialog */
+dialog.modal {
+  padding: 0; border: none; border-radius: var(--radius-lg);
+  max-width: 640px; width: 92%; box-shadow: var(--shadow-lg); color: var(--ink);
+}
+dialog.modal::backdrop { background: rgba(28, 14, 30, 0.55); }
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--brand-purple); color: #fff; padding: 16px 20px;
+}
+.modal-head strong { font-size: 1.1rem; }
+.modal-close {
+  background: rgba(255, 255, 255, 0.15); border: none; color: #fff;
+  width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+}
+.modal-close:hover { background: rgba(255, 255, 255, 0.28); }
+.modal-close svg { width: 18px; height: 18px; }
+.modal-body { padding: 20px; max-height: 72vh; overflow-y: auto; }
 
 .avatar {
   display: inline-flex; align-items: center; justify-content: center;

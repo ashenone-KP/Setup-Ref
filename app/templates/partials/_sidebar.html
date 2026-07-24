@@ -14,12 +14,23 @@
       <div class="sidebar-section">Supervising</div>
       <a class="nav-item {{ 'active' if request.endpoint == 'staff.dashboard' }}"
          href="{{ url_for('staff.dashboard') }}">{{ icon('dashboard') }}<span>Dashboard</span></a>
+      <a class="nav-item {{ 'active' if request.endpoint == 'staff.requests_list' }}"
+         href="{{ url_for('staff.requests_list') }}">{{ icon('inbox') }}<span>Requests</span>
+         {% if staff_pending_count %}<span class="count-badge nav-badge">{{ staff_pending_count }}</span>{% endif %}</a>
       <a class="nav-item {{ 'active' if request.endpoint == 'staff.profile' }}"
          href="{{ url_for('staff.profile') }}">{{ icon('user') }}<span>Edit profile</span></a>
     {% else %}
       <div class="sidebar-section">Discover</div>
       <a class="nav-item {{ 'active' if request.endpoint == 'student.browse' }}"
          href="{{ url_for('student.browse') }}">{{ icon('search') }}<span>Find a supervisor</span></a>
+      <a class="nav-item {{ 'active' if request.endpoint == 'student.recommended' }}"
+         href="{{ url_for('student.recommended') }}">{{ icon('idea') }}<span>Recommended</span></a>
+      <a class="nav-item {{ 'active' if request.endpoint == 'student.saved' }}"
+         href="{{ url_for('student.saved') }}">{{ icon('star') }}<span>Saved</span></a>
+      <a class="nav-item {{ 'active' if request.endpoint == 'student.my_requests' }}"
+         href="{{ url_for('student.my_requests') }}">{{ icon('inbox') }}<span>My requests</span></a>
+      <a class="nav-item {{ 'active' if request.endpoint == 'student.interests' }}"
+         href="{{ url_for('student.interests') }}">{{ icon('sliders') }}<span>My interests</span></a>
     {% endif %}
   </nav>
 

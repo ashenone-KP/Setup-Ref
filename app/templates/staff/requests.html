@@ -1,0 +1,54 @@
+{% extends 'layouts/dashboard.html' %}
+{% from 'partials/_icons.html' import icon %}
+{% block title %}Requests &middot; SupervisorMatch{% endblock %}
+{% block page_title %}Supervision requests{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h2>Supervision requests</h2>
+  <p class="muted">Supervising {{ current_user.accepted_count() }} of {{ current_user.capacity }} students.</p>
+</div>
+
+<div class="card">
+  <div class="card-header"><h3>Pending ({{ pending|length }})</h3></div>
+  {% if pending %}
+    <div class="stack-sm">
+      {% for r in pending %}
+        <div class="card card-flat" style="border:1px solid var(--line);">
+          <div class="row-between">
+            <div>
+              <strong>{{ r.student.name }}</strong>
+              {% if r.project_idea %}<div class="muted small">Project: {{ r.project_idea.title }}</div>{% endif %}
+              {% if r.message %}<p class="small" style="margin-top:6px;">{{ r.message }}</p>{% endif %}
+            </div>
+            <div class="row" style="gap:8px;">
+              <form method="post" action="{{ url_for('staff.accept_request', req_id=r.id) }}">
+                <button class="btn btn-primary btn-sm" type="submit">{{ icon('check') }}<span>Accept</span></button>
+              </form>
+              <form method="post" action="{{ url_for('staff.decline_request', req_id=r.id) }}">
+                <button class="btn btn-danger btn-sm" type="submit">{{ icon('x') }}<span>Decline</span></button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty">No pending requests.</p>
+  {% endif %}
+</div>
+
+{% if handled %}
+  <div class="card">
+    <div class="card-header"><h3>Handled</h3></div>
+    <div class="stack-sm">
+      {% for r in handled %}
+        <div class="row-between">
+          <span>{{ r.student.name }}{% if r.project_idea %} &mdash; {{ r.project_idea.title }}{% endif %}</span>
+          <span class="pill {{ 'pill-open' if r.status == 'accepted' else 'pill-taken' }}">{{ r.status|capitalize }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

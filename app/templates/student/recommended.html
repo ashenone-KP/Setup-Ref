@@ -1,0 +1,26 @@
+{% extends 'layouts/dashboard.html' %}
+{% from 'partials/_staff_card.html' import staff_card with context %}
+{% block title %}Recommended &middot; SupervisorMatch{% endblock %}
+{% block page_title %}Recommended for you{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h2>Recommended supervisors</h2>
+  <p class="muted">Ranked by how many of your interests they cover.</p>
+</div>
+
+{% if not has_interests %}
+  <div class="card"><p class="empty" style="margin:0;">Add some
+    <a href="{{ url_for('student.interests') }}">interests</a> to get recommendations.</p></div>
+{% elif ranked %}
+  <div class="grid-cards">
+    {% for member, score, shared in ranked %}
+      {{ staff_card(member, member.id in bookmarked_ids, member.id in pending_ids, accepted,
+                    (score|string) + ' shared') }}
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card"><p class="empty" style="margin:0;">No supervisors match your interests yet.
+    Try adding more <a href="{{ url_for('student.interests') }}">interests</a>.</p></div>
+{% endif %}
+{% endblock %}
