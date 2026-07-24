@@ -1,36 +1,49 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block title %}Sign up &middot; SupervisorMatch{% endblock %}
-{% block content %}
-<div class="auth-wrap">
-  <h1 class="page-title">Create your account</h1>
-  <div class="card">
-    <form method="post" action="{{ url_for('auth.register') }}">
-      <label>I am a&hellip;</label>
-      <div class="role-toggle">
-        <label>
-          <input type="radio" name="role" value="student"
-                 {{ 'checked' if role != 'staff' else '' }}>
-          <span>Student</span>
-        </label>
-        <label>
-          <input type="radio" name="role" value="staff"
-                 {{ 'checked' if role == 'staff' else '' }}>
-          <span>Staff</span>
-        </label>
-      </div>
 
-      <label for="name">Full name</label>
-      <input type="text" id="name" name="name" value="{{ name or '' }}" required>
+{% block body %}
+<div class="auth-page">
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <div class="brand-tile">SM</div>
+      <h1>Create your account</h1>
+      <p>Join as a student or a member of staff</p>
+    </div>
 
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" value="{{ email or '' }}" required>
+    {% include 'partials/_flashes.html' %}
 
-      <label for="password">Password <span class="muted">(min 6 characters)</span></label>
-      <input type="password" id="password" name="password" required>
+    <div class="card auth-card">
+      <form method="post" action="{{ url_for('auth.register') }}">
+        <label>I am a&hellip;</label>
+        <div class="role-toggle">
+          <label>
+            <input type="radio" name="role" value="student" {{ 'checked' if role != 'staff' else '' }}>
+            Student
+          </label>
+          <label>
+            <input type="radio" name="role" value="staff" {{ 'checked' if role == 'staff' else '' }}>
+            Staff
+          </label>
+        </div>
 
-      <button type="submit" class="btn btn-primary">Create account</button>
-    </form>
+        <div class="field">
+          <label for="name">Full name</label>
+          <input type="text" id="name" name="name" value="{{ name or '' }}" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="{{ email or '' }}"
+                 placeholder="name@myport.ac.uk" required>
+        </div>
+        <div class="field">
+          <label for="password">Password <span class="muted small">(min 6 characters)</span></label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create account</button>
+      </form>
+    </div>
+
+    <p class="auth-alt">Already registered? <a href="{{ url_for('auth.login') }}">Log in</a></p>
   </div>
-  <p class="muted">Already registered? <a href="{{ url_for('auth.login') }}">Log in</a></p>
 </div>
 {% endblock %}

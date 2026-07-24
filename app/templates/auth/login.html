@@ -1,19 +1,42 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% from 'partials/_icons.html' import icon %}
 {% block title %}Log in &middot; SupervisorMatch{% endblock %}
-{% block content %}
-<div class="auth-wrap">
-  <h1 class="page-title">Log in</h1>
-  <div class="card">
-    <form method="post" action="{{ url_for('auth.login') }}">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" value="{{ email or '' }}" required>
 
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" required>
+{% block body %}
+<div class="auth-page">
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <div class="brand-tile">SM</div>
+      <h1>SupervisorMatch</h1>
+      <p>Final-year project supervisor matching</p>
+    </div>
 
-      <button type="submit" class="btn btn-primary">Log in</button>
-    </form>
+    {% include 'partials/_flashes.html' %}
+
+    <div class="card auth-card">
+      <h2>Welcome back</h2>
+      <p class="subtitle">Log in to find or offer supervision</p>
+      <form method="post" action="{{ url_for('auth.login') }}">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="{{ email or '' }}"
+                 placeholder="name@myport.ac.uk" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Log in</button>
+      </form>
+    </div>
+
+    <p class="auth-alt">No account? <a href="{{ url_for('auth.register') }}">Sign up</a></p>
+
+    <div class="feature-row">
+      <div class="tile">{{ icon('shield') }}<span>Role-based access</span></div>
+      <div class="tile">{{ icon('search') }}<span>Search by topic</span></div>
+      <div class="tile">{{ icon('send') }}<span>Request supervision</span></div>
+    </div>
   </div>
-  <p class="muted">No account? <a href="{{ url_for('auth.register') }}">Sign up</a></p>
 </div>
 {% endblock %}

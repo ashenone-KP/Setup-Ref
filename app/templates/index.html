@@ -1,31 +1,54 @@
-{% extends "base.html" %}
-{% block content %}
-<section class="hero">
-  <h1>Find the right final-year project supervisor</h1>
-  <p>
-    Staff publish their areas of interest and project ideas. Students browse,
-    search by topic, and request supervision &mdash; all in one place.
-  </p>
-  <div class="row">
-    <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Get started</a>
-    <a class="btn btn-ghost" href="{{ url_for('auth.login') }}">Log in</a>
-  </div>
-</section>
+{% extends 'base.html' %}
+{% from 'partials/_icons.html' import icon %}
 
-<div class="grid grid-2">
-  <div class="card">
-    <h3>For staff</h3>
-    <p class="muted">
-      Manage your research and teaching areas, propose project ideas, set how
-      many students you can supervise, and respond to supervision requests.
-    </p>
+{% block body %}
+<header class="public-header">
+  <div class="inner">
+    <a class="public-brand" href="{{ url_for('main.index') }}">
+      <span class="brand-tile" style="width:32px;height:32px;font-size:.85rem;">SM</span>
+      SupervisorMatch
+    </a>
+    <nav class="public-nav">
+      <a href="{{ url_for('auth.login') }}">Log in</a>
+      <a class="btn btn-primary btn-sm" href="{{ url_for('auth.register') }}">Sign up</a>
+    </nav>
   </div>
-  <div class="card">
-    <h3>For students</h3>
-    <p class="muted">
-      Search staff by topic, explore their project ideas, bookmark favourites,
-      get recommended supervisors, and send a supervision request.
+</header>
+
+<main class="public-main">
+  <section class="hero">
+    <h1>Find the right final-year project supervisor</h1>
+    <p>
+      Staff publish their areas of interest and project ideas. Students browse,
+      search by topic, and request supervision &mdash; all in one place.
     </p>
+    <div class="row">
+      <a class="btn btn-accent btn-lg" href="{{ url_for('auth.register') }}">Get started</a>
+      <a class="btn btn-outline btn-lg" href="{{ url_for('auth.login') }}">Log in</a>
+    </div>
+  </section>
+
+  <div class="grid-cards" style="margin-bottom:24px;">
+    <div class="card">
+      <span class="avatar">{{ icon('user') }}</span>
+      <h3 style="margin:12px 0 6px;">For staff</h3>
+      <p class="muted">
+        Manage your research and teaching areas, propose project ideas, set how
+        many students you can supervise, and respond to supervision requests.
+      </p>
+    </div>
+    <div class="card">
+      <span class="avatar avatar-azure">{{ icon('search') }}</span>
+      <h3 style="margin:12px 0 6px;">For students</h3>
+      <p class="muted">
+        Search staff by topic, explore their project ideas, bookmark favourites,
+        get recommended supervisors, and send a supervision request.
+      </p>
+    </div>
   </div>
-</div>
+</main>
+
+<footer class="public-footer">
+  SupervisorMatch &middot; Final-year project supervisor matching &middot; M30819
+</footer>
 {% endblock %}

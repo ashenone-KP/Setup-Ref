@@ -1,28 +1,33 @@
-{% extends "base.html" %}
+{% extends 'layouts/dashboard.html' %}
+{% from 'partials/_icons.html' import icon %}
 {% block title %}{{ staff.name }} &middot; SupervisorMatch{% endblock %}
-{% block content %}
-<a class="muted" href="{{ url_for('student.browse') }}">&larr; Back to search</a>
+{% block page_title %}Supervisor profile{% endblock %}
 
-<div class="row space-between" style="margin-top:8px;">
-  <div>
-    <h1 class="page-title">{{ staff.title }} {{ staff.name }}</h1>
-    <p class="subtitle">
-      Supervising {{ staff.accepted_count() }} of {{ staff.capacity }} students
+{% block content %}
+<a class="btn btn-ghost btn-sm" href="{{ url_for('student.browse') }}" style="margin-bottom:14px;">
+  {{ icon('back') }}<span>Back to search</span>
+</a>
+
+<div class="card">
+  <div class="row" style="gap:16px; flex-wrap:nowrap; align-items:flex-start;">
+    <span class="avatar" style="width:56px;height:56px;font-size:1.2rem;">{{ staff.name[:1]|upper }}</span>
+    <div style="min-width:0;">
+      <h2>{{ staff.title }} {{ staff.name }}</h2>
+      <p class="muted" style="margin:4px 0 8px;">
+        Supervising {{ staff.accepted_count() }} of {{ staff.capacity }} students
+      </p>
       {% if staff.has_capacity() %}
         <span class="pill pill-open">Accepting students</span>
       {% else %}
         <span class="pill pill-taken">At capacity</span>
       {% endif %}
-    </p>
+    </div>
   </div>
+  {% if staff.bio %}<p style="margin-top:16px;">{{ staff.bio }}</p>{% endif %}
 </div>
 
-{% if staff.bio %}
-<div class="card"><p>{{ staff.bio }}</p></div>
-{% endif %}
-
 <div class="card">
-  <h3>Areas of interest</h3>
+  <div class="card-header"><h3>Areas of interest</h3></div>
   {% if staff.areas %}
     {% for a in staff.areas %}<span class="tag">{{ a.name }}</span>{% endfor %}
   {% else %}
@@ -31,24 +36,24 @@
 </div>
 
 <div class="card">
-  <h3>Project ideas</h3>
+  <div class="card-header"><h3>Project ideas</h3></div>
   {% if staff.project_ideas %}
-    {% for idea in staff.project_ideas %}
-      <div class="card" style="box-shadow:none;">
-        <div class="row space-between">
-          <h4 style="margin:0;">{{ idea.title }}</h4>
-          <span class="pill {{ 'pill-open' if idea.status == 'open' else 'pill-taken' }}">
-            {{ idea.status|capitalize }}
-          </span>
+    <div class="stack">
+      {% for idea in staff.project_ideas %}
+        <div class="card card-flat" style="border:1px solid var(--line);">
+          <div class="row-between">
+            <h4>{{ idea.title }}</h4>
+            <span class="pill {{ 'pill-open' if idea.status == 'open' else 'pill-taken' }}">{{ idea.status|capitalize }}</span>
+          </div>
+          <p style="margin-top:8px;">{{ idea.description }}</p>
+          {% if idea.area_name %}<div style="margin-top:10px;"><span class="tag">{{ idea.area_name }}</span></div>{% endif %}
         </div>
-        <p>{{ idea.description }}</p>
-        {% if idea.area_name %}<span class="tag">{{ idea.area_name }}</span>{% endif %}
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   {% else %}
     <p class="empty">No project ideas listed.</p>
   {% endif %}
 </div>
 
-<p class="muted">Supervision requests &amp; bookmarks are coming next.</p>
+<p class="muted small">Supervision requests &amp; bookmarks are coming next.</p>
 {% endblock %}

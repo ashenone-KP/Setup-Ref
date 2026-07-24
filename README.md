@@ -45,6 +45,14 @@ python -m pytest                              # run all tests
 python -m pytest --cov=app --cov-report=term  # with coverage
 ```
 
+## Design & attribution
+
+The visual design (layout, component styling, dashboard shell) is adapted from a
+Figma Community template built with [shadcn/ui](https://ui.shadcn.com/) (MIT licence),
+re-implemented in plain CSS and themed with the University of Portsmouth brand
+colours (deep purple `#350034`, azure `#00A0FF`). The original template is kept for
+reference under `docs/design/reference/`.
+
 ## Project links
 
 - Demo video: _add link here_
@@ -53,5 +61,5 @@ python -m pytest --cov=app --cov-report=term  # with coverage
 ## Status
 
 Implemented: accounts & roles, staff area/project-idea management, student
-browse/search & filter, supervisor matching service.
+browse/search & filter, supervisor matching service, UoP-themed UI.
 Next: supervision requests, bookmarks, recommendation page.

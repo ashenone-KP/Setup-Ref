@@ -21,3 +21,8 @@ instance/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Design reference (third-party Figma/shadcn template kept locally, not committed;
+# it is credited in the README instead)
+docs/design/reference/
+*.zip
