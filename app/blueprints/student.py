@@ -129,6 +129,52 @@ def my_requests():
     return render_template("student/requests.html", requests=reqs)
 
 
+@student_bp.route("/requests/<int:req_id>/cancel", methods=["POST"])
+@login_required
+@student_required
+def cancel_request(req_id):
+    req = _own_request_or_404(req_id)
+    if req.status != "pending":
+        flash("Only pending requests can be cancelled.", "error")
+    else:
+        db.session.delete(req)
+        db.session.commit()
+        flash("Request cancelled.", "success")
+    return redirect(url_for("student.my_requests"))
+
+
+@student_bp.route("/requests/<int:req_id>/edit", methods=["POST"])
+@login_required
+@student_required
+def edit_request(req_id):
+    req = _own_request_or_404(req_id)
+    if req.status != "pending":
+        flash("Only pending requests can be edited.", "error")
+        return redirect(url_for("student.my_requests"))
+
+    project_idea_id = request.form.get("project_idea_id") or None
+    if project_idea_id:
+        try:
+            project_idea_id = int(project_idea_id)
+        except (TypeError, ValueError):
+            project_idea_id = None
+        if project_idea_id and not any(i.id == project_idea_id for i in req.staff.project_ideas):
+            project_idea_id = None
+
+    req.message = request.form.get("message", "").strip()
+    req.project_idea_id = project_idea_id
+    db.session.commit()
+    flash("Request updated.", "success")
+    return redirect(url_for("student.my_requests"))
+
+
+def _own_request_or_404(req_id):
+    req = db.session.get(SupervisionRequest, req_id)
+    if req is None or req.student_id != current_user.id:
+        abort(404)
+    return req
+
+
 # --- bookmarks --------------------------------------------------------------
 
 @student_bp.route("/staff/<int:staff_id>/bookmark", methods=["POST"])

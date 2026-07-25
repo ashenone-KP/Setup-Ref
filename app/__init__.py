@@ -43,11 +43,27 @@ def create_app(config_class=Config):
     register_error_handlers(app)
     register_brand(app)
     register_nav(app)
+    register_assets(app)
 
     with app.app_context():
         db.create_all()
 
     return app
+
+
+def register_assets(app):
+    """Provide ``static_v(filename)`` — a static URL with a cache-busting ``?v=``
+    based on the file's modification time, so edited CSS/JS always reload."""
+    @app.context_processor
+    def inject_static_v():
+        def static_v(filename):
+            url = url_for("static", filename=filename)
+            try:
+                version = int(os.path.getmtime(os.path.join(app.static_folder, filename)))
+                return f"{url}?v={version}"
+            except OSError:
+                return url
+        return {"static_v": static_v}
 
 
 def register_nav(app):

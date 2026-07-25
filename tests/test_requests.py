@@ -105,3 +105,76 @@ def test_student_sees_own_requests(client):
     login(client, student)
     resp = client.get("/student/requests")
     assert b"Prof Who" in resp.data
+
+
+def test_student_can_cancel_pending(client):
+    staff = _staff()
+    student = _student()
+    r = SupervisionRequest(student_id=student.id, staff_id=staff.id, status="pending")
+    db.session.add(r)
+    db.session.commit()
+    login(client, student)
+    client.post(f"/student/requests/{r.id}/cancel")
+    assert SupervisionRequest.query.count() == 0
+
+
+def test_cannot_cancel_accepted(client):
+    staff = _staff()
+    student = _student()
+    r = SupervisionRequest(student_id=student.id, staff_id=staff.id, status="accepted")
+    db.session.add(r)
+    db.session.commit()
+    login(client, student)
+    client.post(f"/student/requests/{r.id}/cancel")
+    assert SupervisionRequest.query.count() == 1
+
+
+def test_cannot_cancel_others_request(client):
+    staff = _staff()
+    owner = _student("owner@example.com")
+    other = _student("other@example.com")
+    r = SupervisionRequest(student_id=owner.id, staff_id=staff.id, status="pending")
+    db.session.add(r)
+    db.session.commit()
+    login(client, other)
+    resp = client.post(f"/student/requests/{r.id}/cancel")
+    assert resp.status_code == 404
+    assert SupervisionRequest.query.count() == 1
+
+
+def test_student_can_edit_pending(client):
+    staff = _staff()
+    student = _student()
+    r = SupervisionRequest(student_id=student.id, staff_id=staff.id,
+                           status="pending", message="old")
+    db.session.add(r)
+    db.session.commit()
+    login(client, student)
+    client.post(f"/student/requests/{r.id}/edit", data={"message": "new message"})
+    assert db.session.get(SupervisionRequest, r.id).message == "new message"
+
+
+def test_cannot_edit_accepted(client):
+    staff = _staff()
+    student = _student()
+    r = SupervisionRequest(student_id=student.id, staff_id=staff.id,
+                           status="accepted", message="old")
+    db.session.add(r)
+    db.session.commit()
+    login(client, student)
+    client.post(f"/student/requests/{r.id}/edit", data={"message": "changed"})
+    assert db.session.get(SupervisionRequest, r.id).message == "old"
+
+
+def test_cannot_edit_others_request(client):
+    staff = _staff()
+    owner = _student("owner@example.com")
+    other = _student("other@example.com")
+    r = SupervisionRequest(student_id=owner.id, staff_id=staff.id,
+                           status="pending", message="old")
+    db.session.add(r)
+    db.session.commit()
+    login(client, other)
+    resp = client.post(f"/student/requests/{r.id}/edit", data={"message": "hax"})
+    assert resp.status_code == 404
+    assert db.session.get(SupervisionRequest, r.id).message == "old"

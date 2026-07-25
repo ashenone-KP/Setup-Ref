@@ -1,28 +1,67 @@
 {% extends 'layouts/dashboard.html' %}
+{% from 'partials/_icons.html' import icon %}
 {% block title %}My requests &middot; SupervisorMatch{% endblock %}
-{% block page_title %}My requests{% endblock %}
 
 {% block content %}
 <div class="page-head">
   <h2>My requests</h2>
-  <p class="muted">Track the supervision requests you've sent.</p>
+  <p class="muted">Track, edit or cancel the supervision requests you've sent.</p>
 </div>
 
 {% if requests %}
   <div class="stack-sm">
     {% for r in requests %}
       <div class="card">
-        <div class="row-between">
+        <div class="row-between" style="align-items:flex-start; gap:12px;">
           <div>
             <strong>{{ r.staff.title }} {{ r.staff.name }}</strong>
             {% if r.project_idea %}<div class="muted small">Project: {{ r.project_idea.title }}</div>{% endif %}
             {% if r.message %}<p class="small" style="margin-top:6px;">{{ r.message }}</p>{% endif %}
           </div>
-          <span class="pill {% if r.status == 'accepted' %}pill-open{% elif r.status == 'declined' %}pill-taken{% else %}pill-pending{% endif %}">
-            {{ r.status|capitalize }}
-          </span>
+          <div class="row" style="gap:8px; align-items:center;">
+            <span class="pill {% if r.status == 'accepted' %}pill-open{% elif r.status == 'declined' %}pill-taken{% else %}pill-pending{% endif %}">
+              {{ r.status|capitalize }}
+            </span>
+            {% if r.status == 'pending' %}
+              <button type="button" class="btn btn-outline btn-sm" data-open-modal="edit-{{ r.id }}">
+                {{ icon('edit') }}<span>Edit</span></button>
+              <form method="post" action="{{ url_for('student.cancel_request', req_id=r.id) }}"
+                    onsubmit="return confirm('Cancel this request?');">
+                <button type="submit" class="btn btn-danger btn-sm">{{ icon('x') }}<span>Cancel</span></button>
+              </form>
+            {% endif %}
+          </div>
         </div>
       </div>
+
+      {% if r.status == 'pending' %}
+        <dialog class="modal" id="edit-{{ r.id }}">
+          <div class="modal-head">
+            <strong>Edit request &middot; {{ r.staff.name }}</strong>
+            <button class="modal-close" data-close aria-label="Close">{{ icon('x') }}</button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="{{ url_for('student.edit_request', req_id=r.id) }}">
+              {% set open_ideas = r.staff.project_ideas|selectattr('status', 'equalto', 'open')|list %}
+              {% if open_ideas or r.project_idea %}
+                <label>Project idea <span class="muted small">(optional)</span></label>
+                <select name="project_idea_id">
+                  <option value="">General enquiry</option>
+                  {% if r.project_idea and r.project_idea.status != 'open' %}
+                    <option value="{{ r.project_idea.id }}" selected>{{ r.project_idea.title }}</option>
+                  {% endif %}
+                  {% for idea in open_ideas %}
+                    <option value="{{ idea.id }}" {{ 'selected' if r.project_idea_id == idea.id }}>{{ idea.title }}</option>
+                  {% endfor %}
+                </select>
+              {% endif %}
+              <label>Message</label>
+              <textarea name="message">{{ r.message or '' }}</textarea>
+              <button class="btn btn-primary btn-sm" type="submit">{{ icon('check') }}<span>Save changes</span></button>
+            </form>
+          </div>
+        </dialog>
+      {% endif %}
     {% endfor %}
   </div>
 {% else %}

@@ -1,51 +1,30 @@
-// Sidebar behaviour:
-//  - Desktop (> 860px): the toggle collapses the sidebar to an icon-only rail,
-//    and the choice is remembered in localStorage.
-//  - Mobile (<= 860px): the toggle opens/closes the off-canvas drawer.
+// Top navbar: the hamburger toggles the dropdown menu on mobile.
 (function () {
-  var shell = document.getElementById("appShell");
+  var navbar = document.getElementById("navbar");
   var toggle = document.getElementById("navToggle");
-  if (!shell) return;
+  if (!navbar || !toggle) return;
 
-  var DESKTOP = 861;
-  var STORE_KEY = "sm.sidebarCollapsed";
-
-  // Restore the remembered desktop state.
-  try {
-    if (localStorage.getItem(STORE_KEY) === "1" && window.innerWidth >= DESKTOP) {
-      shell.classList.add("sidebar-collapsed");
-    }
-  } catch (e) { /* ignore storage errors */ }
-
-  if (toggle) {
-    toggle.addEventListener("click", function () {
-      if (window.innerWidth >= DESKTOP) {
-        var collapsed = shell.classList.toggle("sidebar-collapsed");
-        try { localStorage.setItem(STORE_KEY, collapsed ? "1" : "0"); } catch (e) {}
-      } else {
-        shell.classList.toggle("nav-open");
-      }
-    });
-  }
-
-  // On mobile, close the drawer when the backdrop or a nav link is tapped.
-  shell.addEventListener("click", function (e) {
-    if (e.target.closest("[data-close-nav]") || e.target.closest(".nav-item")) {
-      shell.classList.remove("nav-open");
-    }
+  toggle.addEventListener("click", function () {
+    navbar.classList.toggle("nav-open");
+  });
+  // Close the menu after tapping a link (mobile).
+  navbar.addEventListener("click", function (e) {
+    if (e.target.closest(".nav-link")) navbar.classList.remove("nav-open");
   });
 })();
 
-// Supervisor popups: clicking a card opens its <dialog>.
+// Popups: open a <dialog> from a supervisor card or an [data-open-modal] button.
 (function () {
-  document.querySelectorAll(".staff-card").forEach(function (card) {
-    var dlg = document.getElementById(card.getAttribute("data-modal"));
+  function opener(el) {
+    var dlg = document.getElementById(el.getAttribute("data-modal") || el.getAttribute("data-open-modal"));
     if (!dlg || !dlg.showModal) return;
-    card.addEventListener("click", function () { dlg.showModal(); });
-    card.addEventListener("keydown", function (e) {
+    el.addEventListener("click", function (e) { e.stopPropagation(); dlg.showModal(); });
+    el.addEventListener("keydown", function (e) {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); dlg.showModal(); }
     });
-  });
+  }
+  document.querySelectorAll(".staff-card").forEach(opener);
+  document.querySelectorAll("[data-open-modal]").forEach(opener);
 
   document.querySelectorAll("dialog.modal").forEach(function (dlg) {
     dlg.querySelectorAll("[data-close]").forEach(function (btn) {
