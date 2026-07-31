@@ -31,6 +31,6 @@ Thumbs.db
 docs/design/reference/
 *.zip
 
-# Report evidence: screenshots of a third party's live tool (kept local for the
-# Word document; not published to the repo)
-docs/report/evidence/
+# The written report is kept local and submitted separately; only the application
+# code and the API documentation live in this repository.
+docs/report/
