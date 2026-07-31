@@ -6,6 +6,9 @@ __pycache__/
 .coverage
 htmlcov/
 
+# Sphinx build output (Read the Docs builds from source)
+docs/api/_build/
+
 # Virtual environment
 .venv/
 venv/
