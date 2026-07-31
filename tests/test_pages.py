@@ -1,6 +1,3 @@
-"""Page-render and remaining-branch tests that raise coverage toward the
-'all units tested' band (auth/main redirects, staff profile & idea edit/delete,
-student page renders, request with a named project idea)."""
 from app.extensions import db
 from app.models import (ROLE_STAFF, ROLE_STUDENT, AreaOfInterest, ProjectIdea,
                         SupervisionRequest, User)

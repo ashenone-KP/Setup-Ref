@@ -1,8 +1,3 @@
-"""Unit tests for the pure matching/recommendation functions.
-
-These use equivalence partitions: no overlap, partial overlap, full overlap,
-and case/whitespace differences.
-"""
 from app.services.matching import normalise, overlap_score, recommend_supervisors
 
 from tests.conftest import create_user, login  # noqa: F401  (login unused but handy)
